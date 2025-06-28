@@ -1,72 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gift Center Pi</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f3f3f3;
-      text-align: center;
-      padding: 50px;
-    }
-    h1 {
-      color: #6a1b9a;
-    }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      background-color: #6a1b9a;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    button:hover {
-      background-color: #4a148c;
-    }
-    .section {
-      margin-top: 40px;
-    }
+    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+    header, footer { background: #5c2d91; color: white; text-align: center; padding: 1em; }
+    main { padding: 20px; }
+    section { background: white; margin-bottom: 20px; padding: 15px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+    h2 { color: #5c2d91; }
+    button.pi-pay { background: #5c2d91; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1>🌟 Welcome to Gift Center Pi 🌟</h1>
-  <p>Free Duas, Crypto Tips, Wallpapers & Naats — All for Pi Network Users</p>
 
-  <button id="payButton">Donate 0.001 Pi (Test)</button>
+  <header>
+    <h1>🎁 Gift Center Pi</h1>
+    <p>Powered by Pi Network</p>
+  </header>
 
-  <div class="section">
-    <h3>📜 Coming Soon</h3>
-    <p>Duas, Islamic Wallpapers, Crypto Insights & More</p>
-  </div>
+  <main>
+
+    <section>
+      <h2>📿 Dua of the Day</h2>
+      <p>Aaj ki dua roohani sukoon ke liye specially selected hai.</p>
+      <a href="dua.html">Open</a>
+    </section>
+
+    <section>
+      <h2>📈 Crypto Tips</h2>
+      <p>Ilm-ul-Adad aur market analysis par mabni har roz ke crypto tips.</p>
+      <a href="crypto.html">View</a>
+    </section>
+
+    <section>
+      <h2>🏏 Cricket Updates & Scores</h2>
+      <p>Live scores aur match highlights har roz update honge.</p>
+      <a href="cricket.html">Live Scores</a>
+    </section>
+
+    <section>
+      <h2>🗓️ Today Hijri & Gregorian Calendar</h2>
+      <p>Aaj ki tareekh, Hijri aur English dono calendars ke sath.</p>
+      <a href="calendar.html">View Date</a>
+    </section>
+
+    <section>
+      <h2>📊 Stock Market Today</h2>
+      <p>Pakistan aur International stock updates.</p>
+      <a href="stocks.html">Market Status</a>
+    </section>
+
+    <section>
+      <h2>💰 Bitcoin & Ethereum Rates</h2>
+      <p>Realtime BTC & ETH prices and chart summary.</p>
+      <a href="crypto-market.html">Crypto Rates</a>
+    </section>
+
+    <section>
+      <h2>🔮 Today’s Horoscope</h2>
+      <p>Har burj ke liye daily astrology and Ilm-e-Nujoom ki roshni mein.</p>
+      <a href="horoscope.html">See Horoscope</a>
+    </section>
+
+    <section>
+      <h2>📰 News & Bulletin</h2>
+      <p>Rozana headlines, news alerts, aur khabrain Urdu mein.</p>
+      <a href="news.html">Read More</a>
+    </section>
+
+    <section>
+      <h2>💎 Support Gift Center Pi</h2>
+      <p>Agar aap ko hamara kaam pasand aaye, Pi donate karein.</p>
+      <button class="pi-pay" onclick="makePayment()">Donate 1 Pi</button>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Gift Center Pi | Made with ❤️ in Pakistan</p>
+  </footer>
 
   <script>
-    Pi.init({ version: "2.0", sandbox: false });
+    const payment = {
+      amount: 1,
+      memo: "Support Gift Center Pi",
+      metadata: { paymentType: "donation" },
+      to: "GCJNUEHCGWA3GWAUG2XQHPSTDD32GLJ6UICEOQP5NBZARPSLEJP2UCMC"
+    };
 
-    document.getElementById("payButton").addEventListener("click", async () => {
+    async function makePayment() {
       try {
-        const scopes = ['username'];
-        const authResult = await Pi.authenticate(scopes);
-
-        const paymentData = {
-          amount: 0.001,
-          memo: "Test donation for Gift Center Pi",
-          metadata: { purpose: "test" },
-          recipient: "fomi052" // ← Replace with your Pi username if different
-        };
-
-        const payment = await Pi.createPayment(paymentData);
-        await Pi.completePayment(payment.identifier);
-        alert("Test payment successful!");
-      } catch (err) {
-        console.error("Payment failed", err);
-        alert("Payment failed or cancelled.");
+        const scopes = ['payments'];
+        Pi.init({ version: "2.0", sandbox: false });
+        Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+          Pi.createPayment(payment, {
+            onReadyForServerApproval: function(paymentId) {
+              console.log("Payment ready for approval:", paymentId);
+              // Here you would send paymentId to your server for approval
+            },
+            onReadyForServerCompletion: function(paymentId, txid) {
+              console.log("Payment ready for completion:", paymentId, txid);
+              // Finalize the payment on your server
+            },
+            onCancel: function(paymentId) {
+              alert("Payment cancelled.");
+            },
+            onError: function(error, payment) {
+              alert("Payment failed: " + error);
+            }
+          });
+        });
+      } catch (error) {
+        console.error("Payment init error:", error);
       }
-    });
+    }
+
+    function onIncompletePaymentFound(payment) {
+      console.warn("Found incomplete payment:", payment);
+    }
   </script>
+
 </body>
 </html>
