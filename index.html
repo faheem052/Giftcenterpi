@@ -5,6 +5,7 @@
   <title>Gift Center Pi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     body { background-color: #f9fafb; font-family: sans-serif; }
     .card { box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -15,52 +16,52 @@
   <h1 class="text-3xl font-bold text-center mb-6">🎁 Gift Center Pi</h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    
-    <!-- Dua of the Day -->
+
+    <!-- Dua -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">📿 Dua of the Day</h2>
       <p>"اللهم اجعلني من التوابين واجعلني من المتطهرين"</p>
     </div>
 
-    <!-- Bitcoin & Ethereum -->
+    <!-- Crypto Prices -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">💰 Crypto Prices</h2>
       <p>BTC: <span id="btc-price">Loading...</span></p>
       <p>ETH: <span id="eth-price">Loading...</span></p>
     </div>
 
-    <!-- Cricket Scores -->
+    <!-- Cricket -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🏏 Cricket Scores</h2>
-      <p id="cricket-score">Loading...</p>
+      <p id="cricket-score">Pakistan vs India: Pakistan 142/3 (15 ov)</p>
     </div>
 
-    <!-- Hijri & Gregorian Date -->
+    <!-- Dates -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🗓️ Today’s Date</h2>
       <p id="greg-date">Gregorian: Loading...</p>
       <p id="hijri-date">Hijri: Loading...</p>
     </div>
 
-    <!-- Stock Market -->
+    <!-- Stock -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">📈 Stock Market</h2>
-      <p id="stocks">Loading...</p>
+      <p id="stocks">KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%</p>
     </div>
 
     <!-- News -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">📰 News Headlines</h2>
-      <ul id="news" class="list-disc pl-5">
-        <li>Loading...</li>
+      <ul id="news" class="list-disc pl-5 text-sm text-gray-700">
+        <li>Loading latest news...</li>
       </ul>
     </div>
 
-    <!-- Pi Payment Button -->
+    <!-- Pi Payment -->
     <div class="card bg-white p-4 rounded-lg text-center">
       <h2 class="text-xl font-semibold mb-2">💳 Pay with Pi</h2>
-      <button class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded-full">
-        Pi Payment (Coming Soon)
+      <button onclick="payWithPi()" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded-full">
+        Pay Now
       </button>
     </div>
 
@@ -70,9 +71,9 @@
     &copy; 2025 Gift Center Pi
   </footer>
 
-  <!-- JavaScript for Live Updates -->
+  <!-- Scripts -->
   <script>
-    // Crypto Prices - CoinGecko
+    // CoinGecko - Crypto Prices
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd')
       .then(res => res.json())
       .then(data => {
@@ -80,7 +81,7 @@
         document.getElementById('eth-price').innerText = '$' + data.ethereum.usd;
       });
 
-    // Hijri + Gregorian Date
+    // Hijri Calendar
     fetch('https://api.aladhan.com/v1/gToH?date=' + new Date().toISOString().slice(0,10))
       .then(res => res.json())
       .then(data => {
@@ -88,21 +89,41 @@
         document.getElementById('hijri-date').innerText = 'Hijri: ' + data.data.hijri.date;
       });
 
-    // Cricket Score - Placeholder (You can link your own API here)
-    document.getElementById('cricket-score').innerText = 'Pakistan vs India: Pakistan 142/3 (15 ov)';
-
-    // Stock Market - Placeholder
-    document.getElementById('stocks').innerText = 'KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%';
-
-    // News - Free API or RSS Feed (placeholder)
-    fetch('https://api.currentsapi.services/v1/latest-news?apiKey=demo')
+    // News - JSON Feed (Example)
+    fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.dawn.com/rss')
       .then(res => res.json())
       .then(data => {
-        let newsList = data.news.slice(0, 5).map(item => `<li>${item.title}</li>`).join('');
-        document.getElementById('news').innerHTML = newsList;
-      }).catch(() => {
-        document.getElementById('news').innerHTML = '<li>Unable to fetch news</li>';
+        let html = '';
+        data.items.slice(0, 5).forEach(item => {
+          html += `<li><a href="${item.link}" target="_blank">${item.title}</a></li>`;
+        });
+        document.getElementById('news').innerHTML = html;
       });
+
+    // Pi Payment SDK
+    function payWithPi() {
+      const paymentData = {
+        amount: 0.001,
+        memo: "Donation to Gift Center Pi",
+        metadata: { purpose: "gift" },
+        to: "GCJNUEHCGWA3GWAUG2XQHPSTDD32GLJ6UICEOQP5NBZARPSLEJP2UCMC"
+      };
+
+      Pi.createPayment(paymentData, {
+        onReadyForServerApproval: function (paymentId) {
+          alert('Send this payment ID to your backend: ' + paymentId);
+        },
+        onReadyForServerCompletion: function (paymentId, txid) {
+          alert('Payment completed with txid: ' + txid);
+        },
+        onCancel: function (paymentId) {
+          alert('Payment cancelled.');
+        },
+        onError: function (error, paymentId) {
+          alert('Error: ' + error);
+        }
+      });
+    }
   </script>
 </body>
 </html>
