@@ -97,18 +97,25 @@
     }).format(today);
     document.getElementById('hijri-date').innerText = 'Hijri: ' + hijriDate;
 
-    // News from Dawn (via Feednami)
-    fetch("https://api.feednami.com/api/v1/feed?url=https://www.dawn.com/rss")
-      .then(response => response.json())
-      .then(data => {
-        const list = data.entries.slice(0, 5).map(entry =>
-          `<li><a href="${entry.link}" target="_blank">${entry.title}</a></li>`
-        ).join('');
-        document.getElementById('news').innerHTML = list;
-      }).catch(() => {
-        document.getElementById('news').innerHTML = "<li>News not available</li>";
-      });
-
+    // Express Tribune English News (RSS)
+fetch("https://tribune.com.pk/feed/")
+  .then(res => res.text())
+  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+  .then(data => {
+    const items = data.querySelectorAll("item");
+    let html = "";
+    items.forEach((el, i) => {
+      if (i < 5) {
+        const title = el.querySelector("title").textContent;
+        const link = el.querySelector("link").textContent;
+        html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
+      }
+    });
+    document.getElementById("news").innerHTML = html;
+  })
+  .catch(() => {
+    document.getElementById("news").innerHTML = "<li>Unable to fetch news</li>";
+  });
     // Pi Payment SDK
     function payWithPi() {
       const paymentData = {
