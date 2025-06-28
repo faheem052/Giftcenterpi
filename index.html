@@ -23,7 +23,7 @@
       <p>"اللهم اجعلني من التوابين واجعلني من المتطهرين"</p>
     </div>
 
-    <!-- Crypto Prices -->
+    <!-- Crypto -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">💰 Crypto Prices</h2>
       <p>BTC: <span id="btc-price">Loading...</span></p>
@@ -33,20 +33,20 @@
     <!-- Cricket -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🏏 Cricket Scores</h2>
-      <p id="cricket-score">Pakistan vs India: Pakistan 142/3 (15 ov)</p>
+      <p>Pakistan vs India: Pakistan 142/3 (15 ov)</p>
     </div>
 
-    <!-- Dates -->
+    <!-- Date -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🗓️ Today’s Date</h2>
       <p id="greg-date">Gregorian: Loading...</p>
       <p id="hijri-date">Hijri: Loading...</p>
     </div>
 
-    <!-- Stock -->
+    <!-- Stocks -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">📈 Stock Market</h2>
-      <p id="stocks">KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%</p>
+      <p>KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%</p>
     </div>
 
     <!-- News -->
@@ -73,7 +73,7 @@
 
   <!-- Scripts -->
   <script>
-    // CoinGecko - Crypto Prices
+    // Crypto Prices
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd')
       .then(res => res.json())
       .then(data => {
@@ -81,23 +81,32 @@
         document.getElementById('eth-price').innerText = '$' + data.ethereum.usd;
       });
 
-    // Hijri Calendar
-    fetch('https://api.aladhan.com/v1/gToH?date=' + new Date().toISOString().slice(0,10))
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('greg-date').innerText = 'Gregorian: ' + data.data.gregorian.date;
-        document.getElementById('hijri-date').innerText = 'Hijri: ' + data.data.hijri.date;
-      });
+    // Today’s Date - Gregorian + Hijri (Local Method)
+    const today = new Date();
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('greg-date').innerText = 'Gregorian: ' + today.toLocaleDateString('en-GB', options);
 
-    // News - JSON Feed (Example)
-    fetch('https://api.rss2json.com/v1/api.json?rss_url=https://www.dawn.com/rss')
-      .then(res => res.json())
+    // Hijri (Local Estimate - Accurate enough)
+    const hijriMonths = [
+      "Muharram", "Safar", "Rabiʿ al-awwal", "Rabiʿ al-thani",
+      "Jumada al-awwal", "Jumada al-thani", "Rajab", "Shaʿban",
+      "Ramadan", "Shawwal", "Dhu al-Qaʿdah", "Dhu al-Ḥijjah"
+    ];
+    const hijriDate = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    }).format(today);
+    document.getElementById('hijri-date').innerText = 'Hijri: ' + hijriDate;
+
+    // News from Dawn (via Feednami)
+    fetch("https://api.feednami.com/api/v1/feed?url=https://www.dawn.com/rss")
+      .then(response => response.json())
       .then(data => {
-        let html = '';
-        data.items.slice(0, 5).forEach(item => {
-          html += `<li><a href="${item.link}" target="_blank">${item.title}</a></li>`;
-        });
-        document.getElementById('news').innerHTML = html;
+        const list = data.entries.slice(0, 5).map(entry =>
+          `<li><a href="${entry.link}" target="_blank">${entry.title}</a></li>`
+        ).join('');
+        document.getElementById('news').innerHTML = list;
+      }).catch(() => {
+        document.getElementById('news').innerHTML = "<li>News not available</li>";
       });
 
     // Pi Payment SDK
@@ -125,5 +134,6 @@
       });
     }
   </script>
+
 </body>
-</html>
+  </html>
