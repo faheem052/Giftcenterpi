@@ -31,6 +31,28 @@
       <p>ETH: <span id="eth-price">Loading...</span></p>
     </div>
 
+    <!-- 🚀 Bull Run & Coin Updates -->
+    <div class="card bg-white p-4 rounded-lg">
+      <h2 class="text-xl font-semibold mb-2">🚀 Bull Run & Market Overview</h2>
+      <p>Total Market Cap: <span id="market-cap">Loading...</span></p>
+      <p>BTC Dominance: <span id="btc-dominance">Loading...</span></p>
+    </div>
+
+    <div class="card bg-white p-4 rounded-lg">
+      <h2 class="text-xl font-semibold mb-2">🐸 Meme Coin Updates</h2>
+      <p>DOGE: <span id="doge-price">Loading...</span></p>
+      <p>SHIB: <span id="shib-price">Loading...</span></p>
+      <p>PEPE: <span id="pepe-price">Loading...</span></p>
+    </div>
+
+    <div class="card bg-white p-4 rounded-lg">
+      <h2 class="text-xl font-semibold mb-2">🧪 Altcoin Updates</h2>
+      <p>SOL: <span id="sol-price">Loading...</span></p>
+      <p>ADA: <span id="ada-price">Loading...</span></p>
+      <p>MATIC: <span id="matic-price">Loading...</span></p>
+      <p>AVAX: <span id="avax-price">Loading...</span></p>
+    </div>
+
     <!-- Cricket -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🏏 Cricket Scores</h2>
@@ -48,14 +70,6 @@
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">📈 Stock Market</h2>
       <p>KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%</p>
-    </div>
-
-    <!-- News Headlines -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">📰 News Headlines (Express Tribune)</h2>
-      <ul id="news" class="list-disc pl-5 text-sm text-gray-700">
-        <li>Loading news...</li>
-      </ul>
     </div>
 
     <!-- Pi Payment -->
@@ -82,37 +96,37 @@
         document.getElementById('eth-price').innerText = '$' + data.ethereum.usd;
       });
 
+    // Bull Run Global Data
+    fetch('https://api.coingecko.com/api/v3/global')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('market-cap').innerText = '$' + (data.data.total_market_cap.usd / 1e9).toFixed(2) + 'B';
+        document.getElementById('btc-dominance').innerText = data.data.market_cap_percentage.btc.toFixed(1) + '%';
+      });
+
+    // Meme & Altcoin Prices
+    fetch('https://api.coingecko.com/api/v3/simple/price?ids=dogecoin,shiba-inu,pepe,solana,cardano,polygon,avalanche-2&vs_currencies=usd')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('doge-price').innerText = '$' + data.dogecoin.usd;
+        document.getElementById('shib-price').innerText = '$' + data['shiba-inu'].usd;
+        document.getElementById('pepe-price').innerText = '$' + data.pepe.usd;
+        document.getElementById('sol-price').innerText = '$' + data.solana.usd;
+        document.getElementById('ada-price').innerText = '$' + data.cardano.usd;
+        document.getElementById('matic-price').innerText = '$' + data.polygon.usd;
+        document.getElementById('avax-price').innerText = '$' + data['avalanche-2'].usd;
+      });
+
     // Gregorian Date
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('greg-date').innerText = 'Gregorian: ' + today.toLocaleDateString('en-GB', options);
 
-    // Hijri Date (Local JS)
+    // Hijri Date
     const hijriDate = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
       day: 'numeric', month: 'long', year: 'numeric'
     }).format(today);
     document.getElementById('hijri-date').innerText = 'Hijri: ' + hijriDate;
-
-    // News (Express Tribune)
-    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://tribune.com.pk/feed/"))
-      .then(response => response.json())
-      .then(data => {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(data.contents, "text/xml");
-        const items = xml.querySelectorAll("item");
-        let html = "";
-        items.forEach((el, i) => {
-          if (i < 5) {
-            const title = el.querySelector("title").textContent;
-            const link = el.querySelector("link").textContent;
-            html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
-          }
-        });
-        document.getElementById("news").innerHTML = html;
-      })
-      .catch(() => {
-        document.getElementById("news").innerHTML = "<li>Unable to load news</li>";
-      });
 
     // Pi SDK Payment
     function payWithPi() {
