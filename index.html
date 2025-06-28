@@ -31,13 +31,14 @@
       <p>ETH: <span id="eth-price">Loading...</span></p>
     </div>
 
-    <!-- 🚀 Bull Run & Coin Updates -->
+    <!-- Bull Run -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🚀 Bull Run & Market Overview</h2>
       <p>Total Market Cap: <span id="market-cap">Loading...</span></p>
       <p>BTC Dominance: <span id="btc-dominance">Loading...</span></p>
     </div>
 
+    <!-- Meme Coins -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🐸 Meme Coin Updates</h2>
       <p>DOGE: <span id="doge-price">Loading...</span></p>
@@ -45,6 +46,7 @@
       <p>PEPE: <span id="pepe-price">Loading...</span></p>
     </div>
 
+    <!-- Altcoins -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🧪 Altcoin Updates</h2>
       <p>SOL: <span id="sol-price">Loading...</span></p>
@@ -74,9 +76,9 @@
 
     <!-- Pi Payment -->
     <div class="card bg-white p-4 rounded-lg text-center">
-      <h2 class="text-xl font-semibold mb-2">💳 Pay with Pi</h2>
+      <h2 class="text-xl font-semibold mb-2">🙏 Donate 0.01 Pi if you like our work</h2>
       <button onclick="payWithPi()" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded-full">
-        Pay Now
+        Donate Now
       </button>
     </div>
 
@@ -131,7 +133,7 @@
     // Pi SDK Payment
     function payWithPi() {
       const paymentData = {
-        amount: 0.001,
+        amount: 0.01,
         memo: "Donation to Gift Center Pi",
         metadata: { purpose: "gift" },
         to: "GCJNUEHCGWA3GWAUG2XQHPSTDD32GLJ6UICEOQP5NBZARPSLEJP2UCMC"
