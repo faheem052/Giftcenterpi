@@ -3,127 +3,136 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gift Center Pi - Live Updates</title>
+  <title>Gift Center Pi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0; padding: 0;
-      background: #f5f5f5;
-    }
-    header {
-      background: #6b46c1;
+      background: linear-gradient(145deg, #0f172a, #1e293b);
       color: white;
-      text-align: center;
-      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
     }
-    section {
-      background: white;
-      margin: 10px;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .card {
+      perspective: 1000px;
     }
-    h2 { color: #6b46c1; margin-top: 0; }
-    ul { padding-left: 20px; }
-    a { color: #333; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    .card-inner {
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      position: relative;
+    }
+    .card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front,
+    .card-back {
+      backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 1rem;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
   </style>
 </head>
-<body>
-  <header>
-    <h1>📱 Gift Center Pi</h1>
-    <p>Live Islamic, Crypto, Stock & News Updates</p>
-  </header>
+<body class="p-4">
+  <h1 class="text-4xl font-bold text-center mb-8">🎁 Gift Center Pi</h1>
 
-  <section>
-    <h2>🕋 Dua of the Day</h2>
-    <p>رَّبِّ زِدْنِي عِلْمًا</p>
-    <p><em>“My Lord, increase me in knowledge.”</em> (Quran 20:114)</p>
-  </section>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <!-- 3D Card Component -->
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          📿 Dua of the Day
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          "Ya Hayyu Ya Qayyum, birahmatika astaghees" – Read and reflect daily.
+        </div>
+      </div>
+    </div>
 
-  <section>
-    <h2>🪙 Crypto Market (Live)</h2>
-    <div id="crypto">Loading...</div>
-  </section>
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          💸 Crypto Tips
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          "Buy low, HODL strong. Pi Network is the future."
+        </div>
+      </div>
+    </div>
 
-  <section>
-    <h2>📈 Stock Market Indices (Live)</h2>
-    <div id="stocks">Loading...</div>
-  </section>
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          🏏 Cricket Scores
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          Live match: Pak vs Ind - Pak 142/3 in 15 overs.
+        </div>
+      </div>
+    </div>
 
-  <section>
-    <h2>🗓 Hijri & Gregorian Date</h2>
-    <div id="dates">Loading...</div>
-  </section>
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          🗓️ Calendar
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          28 June 2025 | 30 Dhul-Qadah 1446
+        </div>
+      </div>
+    </div>
 
-  <section>
-    <h2>🔮 Horoscope (Capricorn)</h2>
-    <div id="horoscope">Loading...</div>
-  </section>
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          📈 Stock Market
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          KSE100: +1.45% | Sensex: -0.33% | Dow: +0.85%
+        </div>
+      </div>
+    </div>
 
-  <section>
-    <h2>📰 News Headlines</h2>
-    <ul id="news">Loading...</ul>
-  </section>
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          🪙 BTC & ETH
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          BTC: $61,230 | ETH: $3,450 (live updates soon)
+        </div>
+      </div>
+    </div>
 
-  <section>
-    <h2>🏏 Cricket Score</h2>
-    <p>Coming Soon – API under integration</p>
-  </section>
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          📰 News Bulletin
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          IMF Approves $1B loan to Pakistan, crypto adoption rising in Asia.
+        </div>
+      </div>
+    </div>
 
-  <script>
-    // ✅ 1. Crypto Prices via CoinGecko
-    fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd")
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("crypto").innerHTML = `
-          🟠 Bitcoin (BTC): $${data.bitcoin.usd}<br>
-          🔵 Ethereum (ETH): $${data.ethereum.usd}
-        `;
-      });
+    <div class="card h-64">
+      <div class="card-inner bg-white bg-opacity-10 backdrop-blur-md shadow-lg p-4 rounded-2xl">
+        <div class="card-front flex items-center justify-center text-center text-xl font-bold p-4">
+          💳 Pi Payment
+        </div>
+        <div class="card-back flex items-center justify-center text-center text-sm p-4">
+          <button class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded-full">
+            Pay with Pi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    // ✅ 2. Stock Indices via FinancialModelingPrep
-    fetch("https://financialmodelingprep.com/api/v3/quote/%5EDJI,%5EGSPC,%5EIXIC?apikey=demo")
-      .then(res => res.json())
-      .then(data => {
-        let output = "";
-        data.forEach(item => {
-          output += `📊 ${item.name}: $${item.price}<br>`;
-        });
-        document.getElementById("stocks").innerHTML = output;
-      });
-
-    // ✅ 3. Date & Hijri Date
-    const today = new Date();
-    const hijri = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    }).format(today);
-
-    document.getElementById("dates").innerHTML = `
-      Gregorian: ${today.toDateString()}<br>
-      Hijri: ${hijri}
-    `;
-
-    // ✅ 4. Horoscope from Aztro API (uses CORS proxy)
-    fetch("https://api.allorigins.win/raw?url=https://aztro.sameerkumar.website/?sign=capricorn&day=today", {
-      method: "POST"
-    })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("horoscope").innerText = data.description;
-      });
-
-    // ✅ 5. NewsAPI – using demo key
-    fetch("https://newsapi.org/v2/top-headlines?country=us&apiKey=5f2b4f4a7e7747a4a7b4f4a7e7747a4a")
-      .then(res => res.json())
-      .then(data => {
-        const newsList = data.articles.slice(0, 5).map(article =>
-          `<li><a href="${article.url}" target="_blank">${article.title}</a></li>`
-        ).join('');
-        document.getElementById("news").innerHTML = newsList;
-      }).catch(() => {
-        document.getElementById("news").innerHTML = "<li>Error loading news.</li>";
-      });
-  </script>
+  <footer class="mt-10 text-center text-sm opacity-70">
+    &copy; 2025 Gift Center Pi — Powered by Pi Network
+  </footer>
 </body>
 </html>
