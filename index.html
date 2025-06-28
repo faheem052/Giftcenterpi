@@ -1,26 +1,72 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Gift Center Pi</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gift Center Pi</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #6a1b9a;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #6a1b9a;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background-color: #4a148c;
+    }
+    .section {
+      margin-top: 40px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🎁 Gift Center Pi</h1>
-        <div class="section">
-            <h2>🕋 Daily Dua</h2>
-            <p>“Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina ‘adhaban-nar.”</p>
-        </div>
-        <div class="section">
-            <h2>💸 Crypto Tips</h2>
-            <p>Hold SHIB, PEPE, FLOKI for long-term. Numerology-based insights added weekly.</p>
-        </div>
-        <div class="section">
-            <h2>🖼️ Islamic Wallpapers</h2>
-            <p>High-quality downloadable Islamic art will be added here soon, InshaAllah.</p>
-        </div>
-    </div>
+  <h1>🌟 Welcome to Gift Center Pi 🌟</h1>
+  <p>Free Duas, Crypto Tips, Wallpapers & Naats — All for Pi Network Users</p>
+
+  <button id="payButton">Donate 0.001 Pi (Test)</button>
+
+  <div class="section">
+    <h3>📜 Coming Soon</h3>
+    <p>Duas, Islamic Wallpapers, Crypto Insights & More</p>
+  </div>
+
+  <script>
+    Pi.init({ version: "2.0", sandbox: false });
+
+    document.getElementById("payButton").addEventListener("click", async () => {
+      try {
+        const scopes = ['username'];
+        const authResult = await Pi.authenticate(scopes);
+
+        const paymentData = {
+          amount: 0.001,
+          memo: "Test donation for Gift Center Pi",
+          metadata: { purpose: "test" },
+          recipient: "fomi052" // ← Replace with your Pi username if different
+        };
+
+        const payment = await Pi.createPayment(paymentData);
+        await Pi.completePayment(payment.identifier);
+        alert("Test payment successful!");
+      } catch (err) {
+        console.error("Payment failed", err);
+        alert("Payment failed or cancelled.");
+      }
+    });
+  </script>
 </body>
 </html>
