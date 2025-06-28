@@ -1,127 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Gift Center Pi</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gift Center Pi - Live Updates</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
-    header, footer { background: #5c2d91; color: white; text-align: center; padding: 1em; }
-    main { padding: 20px; }
-    section { background: white; margin-bottom: 20px; padding: 15px; border-radius: 8px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
-    h2 { color: #5c2d91; }
-    button.pi-pay { background: #5c2d91; color: white; padding: 10px 20px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f5f5f5;
+    }
+    header {
+      background: #6b46c1;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+    section {
+      background: white;
+      margin: 10px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    h2 { color: #6b46c1; margin-top: 0; }
+    ul { padding-left: 20px; }
+    a { color: #333; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>🎁 Gift Center Pi</h1>
-    <p>Powered by Pi Network</p>
+    <h1>📱 Gift Center Pi</h1>
+    <p>Live Islamic, Crypto, Stock & News Updates</p>
   </header>
 
-  <main>
+  <section>
+    <h2>🕋 Dua of the Day</h2>
+    <p>رَّبِّ زِدْنِي عِلْمًا</p>
+    <p><em>“My Lord, increase me in knowledge.”</em> (Quran 20:114)</p>
+  </section>
 
-    <section>
-      <h2>📿 Dua of the Day</h2>
-      <p>Aaj ki dua roohani sukoon ke liye specially selected hai.</p>
-      <a href="dua.html">Open</a>
-    </section>
+  <section>
+    <h2>🪙 Crypto Market (Live)</h2>
+    <div id="crypto">Loading...</div>
+  </section>
 
-    <section>
-      <h2>📈 Crypto Tips</h2>
-      <p>Ilm-ul-Adad aur market analysis par mabni har roz ke crypto tips.</p>
-      <a href="crypto.html">View</a>
-    </section>
+  <section>
+    <h2>📈 Stock Market Indices (Live)</h2>
+    <div id="stocks">Loading...</div>
+  </section>
 
-    <section>
-      <h2>🏏 Cricket Updates & Scores</h2>
-      <p>Live scores aur match highlights har roz update honge.</p>
-      <a href="cricket.html">Live Scores</a>
-    </section>
+  <section>
+    <h2>🗓 Hijri & Gregorian Date</h2>
+    <div id="dates">Loading...</div>
+  </section>
 
-    <section>
-      <h2>🗓️ Today Hijri & Gregorian Calendar</h2>
-      <p>Aaj ki tareekh, Hijri aur English dono calendars ke sath.</p>
-      <a href="calendar.html">View Date</a>
-    </section>
+  <section>
+    <h2>🔮 Horoscope (Capricorn)</h2>
+    <div id="horoscope">Loading...</div>
+  </section>
 
-    <section>
-      <h2>📊 Stock Market Today</h2>
-      <p>Pakistan aur International stock updates.</p>
-      <a href="stocks.html">Market Status</a>
-    </section>
+  <section>
+    <h2>📰 News Headlines</h2>
+    <ul id="news">Loading...</ul>
+  </section>
 
-    <section>
-      <h2>💰 Bitcoin & Ethereum Rates</h2>
-      <p>Realtime BTC & ETH prices and chart summary.</p>
-      <a href="crypto-market.html">Crypto Rates</a>
-    </section>
-
-    <section>
-      <h2>🔮 Today’s Horoscope</h2>
-      <p>Har burj ke liye daily astrology and Ilm-e-Nujoom ki roshni mein.</p>
-      <a href="horoscope.html">See Horoscope</a>
-    </section>
-
-    <section>
-      <h2>📰 News & Bulletin</h2>
-      <p>Rozana headlines, news alerts, aur khabrain Urdu mein.</p>
-      <a href="news.html">Read More</a>
-    </section>
-
-    <section>
-      <h2>💎 Support Gift Center Pi</h2>
-      <p>Agar aap ko hamara kaam pasand aaye, Pi donate karein.</p>
-      <button class="pi-pay" onclick="makePayment()">Donate 1 Pi</button>
-    </section>
-
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Gift Center Pi | Made with ❤️ in Pakistan</p>
-  </footer>
+  <section>
+    <h2>🏏 Cricket Score</h2>
+    <p>Coming Soon – API under integration</p>
+  </section>
 
   <script>
-    const payment = {
-      amount: 1,
-      memo: "Support Gift Center Pi",
-      metadata: { paymentType: "donation" },
-      to: "GCJNUEHCGWA3GWAUG2XQHPSTDD32GLJ6UICEOQP5NBZARPSLEJP2UCMC"
-    };
+    // ✅ 1. Crypto Prices via CoinGecko
+    fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("crypto").innerHTML = `
+          🟠 Bitcoin (BTC): $${data.bitcoin.usd}<br>
+          🔵 Ethereum (ETH): $${data.ethereum.usd}
+        `;
+      });
 
-    async function makePayment() {
-      try {
-        const scopes = ['payments'];
-        Pi.init({ version: "2.0", sandbox: false });
-        Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-          Pi.createPayment(payment, {
-            onReadyForServerApproval: function(paymentId) {
-              console.log("Payment ready for approval:", paymentId);
-              // Here you would send paymentId to your server for approval
-            },
-            onReadyForServerCompletion: function(paymentId, txid) {
-              console.log("Payment ready for completion:", paymentId, txid);
-              // Finalize the payment on your server
-            },
-            onCancel: function(paymentId) {
-              alert("Payment cancelled.");
-            },
-            onError: function(error, payment) {
-              alert("Payment failed: " + error);
-            }
-          });
+    // ✅ 2. Stock Indices via FinancialModelingPrep
+    fetch("https://financialmodelingprep.com/api/v3/quote/%5EDJI,%5EGSPC,%5EIXIC?apikey=demo")
+      .then(res => res.json())
+      .then(data => {
+        let output = "";
+        data.forEach(item => {
+          output += `📊 ${item.name}: $${item.price}<br>`;
         });
-      } catch (error) {
-        console.error("Payment init error:", error);
-      }
-    }
+        document.getElementById("stocks").innerHTML = output;
+      });
 
-    function onIncompletePaymentFound(payment) {
-      console.warn("Found incomplete payment:", payment);
-    }
+    // ✅ 3. Date & Hijri Date
+    const today = new Date();
+    const hijri = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    }).format(today);
+
+    document.getElementById("dates").innerHTML = `
+      Gregorian: ${today.toDateString()}<br>
+      Hijri: ${hijri}
+    `;
+
+    // ✅ 4. Horoscope from Aztro API (uses CORS proxy)
+    fetch("https://api.allorigins.win/raw?url=https://aztro.sameerkumar.website/?sign=capricorn&day=today", {
+      method: "POST"
+    })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("horoscope").innerText = data.description;
+      });
+
+    // ✅ 5. NewsAPI – using demo key
+    fetch("https://newsapi.org/v2/top-headlines?country=us&apiKey=5f2b4f4a7e7747a4a7b4f4a7e7747a4a")
+      .then(res => res.json())
+      .then(data => {
+        const newsList = data.articles.slice(0, 5).map(article =>
+          `<li><a href="${article.url}" target="_blank">${article.title}</a></li>`
+        ).join('');
+        document.getElementById("news").innerHTML = newsList;
+      }).catch(() => {
+        document.getElementById("news").innerHTML = "<li>Error loading news.</li>";
+      });
   </script>
-
 </body>
 </html>
