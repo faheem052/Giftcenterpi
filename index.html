@@ -9,6 +9,7 @@
   <style>
     body { background-color: #f9fafb; font-family: sans-serif; }
     .card { box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    a { color: #1d4ed8; text-decoration: underline; }
   </style>
 </head>
 <body class="p-4">
@@ -23,7 +24,7 @@
       <p>"اللهم اجعلني من التوابين واجعلني من المتطهرين"</p>
     </div>
 
-    <!-- Crypto -->
+    <!-- Crypto Prices -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">💰 Crypto Prices</h2>
       <p>BTC: <span id="btc-price">Loading...</span></p>
@@ -36,7 +37,7 @@
       <p>Pakistan vs India: Pakistan 142/3 (15 ov)</p>
     </div>
 
-    <!-- Date -->
+    <!-- Dates -->
     <div class="card bg-white p-4 rounded-lg">
       <h2 class="text-xl font-semibold mb-2">🗓️ Today’s Date</h2>
       <p id="greg-date">Gregorian: Loading...</p>
@@ -49,11 +50,11 @@
       <p>KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%</p>
     </div>
 
-    <!-- News -->
+    <!-- News Headlines -->
     <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">📰 News Headlines</h2>
+      <h2 class="text-xl font-semibold mb-2">📰 News Headlines (Express Tribune)</h2>
       <ul id="news" class="list-disc pl-5 text-sm text-gray-700">
-        <li>Loading latest news...</li>
+        <li>Loading news...</li>
       </ul>
     </div>
 
@@ -71,7 +72,7 @@
     &copy; 2025 Gift Center Pi
   </footer>
 
-  <!-- Scripts -->
+  <!-- JavaScript -->
   <script>
     // Crypto Prices
     fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd')
@@ -81,42 +82,39 @@
         document.getElementById('eth-price').innerText = '$' + data.ethereum.usd;
       });
 
-    // Today’s Date - Gregorian + Hijri (Local Method)
+    // Gregorian Date
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('greg-date').innerText = 'Gregorian: ' + today.toLocaleDateString('en-GB', options);
 
-    // Hijri (Local Estimate - Accurate enough)
-    const hijriMonths = [
-      "Muharram", "Safar", "Rabiʿ al-awwal", "Rabiʿ al-thani",
-      "Jumada al-awwal", "Jumada al-thani", "Rajab", "Shaʿban",
-      "Ramadan", "Shawwal", "Dhu al-Qaʿdah", "Dhu al-Ḥijjah"
-    ];
+    // Hijri Date (Local JS)
     const hijriDate = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
       day: 'numeric', month: 'long', year: 'numeric'
     }).format(today);
     document.getElementById('hijri-date').innerText = 'Hijri: ' + hijriDate;
 
-    // Express Tribune English News (RSS)
-fetch("https://tribune.com.pk/feed/")
-  .then(res => res.text())
-  .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-  .then(data => {
-    const items = data.querySelectorAll("item");
-    let html = "";
-    items.forEach((el, i) => {
-      if (i < 5) {
-        const title = el.querySelector("title").textContent;
-        const link = el.querySelector("link").textContent;
-        html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
-      }
-    });
-    document.getElementById("news").innerHTML = html;
-  })
-  .catch(() => {
-    document.getElementById("news").innerHTML = "<li>Unable to fetch news</li>";
-  });
-    // Pi Payment SDK
+    // News (Express Tribune)
+    fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://tribune.com.pk/feed/"))
+      .then(response => response.json())
+      .then(data => {
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, "text/xml");
+        const items = xml.querySelectorAll("item");
+        let html = "";
+        items.forEach((el, i) => {
+          if (i < 5) {
+            const title = el.querySelector("title").textContent;
+            const link = el.querySelector("link").textContent;
+            html += `<li><a href="${link}" target="_blank">${title}</a></li>`;
+          }
+        });
+        document.getElementById("news").innerHTML = html;
+      })
+      .catch(() => {
+        document.getElementById("news").innerHTML = "<li>Unable to load news</li>";
+      });
+
+    // Pi SDK Payment
     function payWithPi() {
       const paymentData = {
         amount: 0.001,
@@ -143,4 +141,4 @@ fetch("https://tribune.com.pk/feed/")
   </script>
 
 </body>
-  </html>
+</html>
