@@ -1,161 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Gift Center Pi</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script defer src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
-    body { background-color: #f9fafb; font-family: sans-serif; }
-    .card { box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    a { color: #1d4ed8; text-decoration: underline; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      color: #6b3ce3;
+    }
+    p {
+      font-size: 18px;
+      color: #444;
+    }
+    button {
+      padding: 12px 24px;
+      background-color: #8b4dff;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #7a3bdd;
+    }
+    #status {
+      margin-top: 25px;
+      font-size: 17px;
+      color: #444;
+    }
   </style>
 </head>
-<body class="p-4">
+<body>
 
-  <h1 class="text-3xl font-bold text-center mb-6">🎁 Gift Center Pi</h1>
+  <h1>🎁 Gift Center Pi</h1>
+  <p>Login & Donate 0.001 Pi (Testnet)</p>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <button id="loginBtn">Login with Pi</button>
 
-    <!-- Dua -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">📿 Dua of the Day</h2>
-      <p>"اللهم اجعلني من التوابين واجعلني من المتطهرين"</p>
-    </div>
+  <div id="status"></div>
 
-    <!-- Crypto Prices -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">💰 Crypto Prices</h2>
-      <p>BTC: <span id="btc-price">Loading...</span></p>
-      <p>ETH: <span id="eth-price">Loading...</span></p>
-    </div>
-
-    <!-- Bull Run -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">🚀 Bull Run & Market Overview</h2>
-      <p>Total Market Cap: <span id="market-cap">Loading...</span></p>
-      <p>BTC Dominance: <span id="btc-dominance">Loading...</span></p>
-    </div>
-
-    <!-- Meme Coins -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">🐸 Meme Coin Updates</h2>
-      <p>DOGE: <span id="doge-price">Loading...</span></p>
-      <p>SHIB: <span id="shib-price">Loading...</span></p>
-      <p>PEPE: <span id="pepe-price">Loading...</span></p>
-    </div>
-
-    <!-- Altcoins -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">🧪 Altcoin Updates</h2>
-      <p>SOL: <span id="sol-price">Loading...</span></p>
-      <p>ADA: <span id="ada-price">Loading...</span></p>
-      <p>MATIC: <span id="matic-price">Loading...</span></p>
-      <p>AVAX: <span id="avax-price">Loading...</span></p>
-    </div>
-
-    <!-- Cricket -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">🏏 Cricket Scores</h2>
-      <p>Pakistan vs India: Pakistan 142/3 (15 ov)</p>
-    </div>
-
-    <!-- Dates -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">🗓️ Today’s Date</h2>
-      <p id="greg-date">Gregorian: Loading...</p>
-      <p id="hijri-date">Hijri: Loading...</p>
-    </div>
-
-    <!-- Stocks -->
-    <div class="card bg-white p-4 rounded-lg">
-      <h2 class="text-xl font-semibold mb-2">📈 Stock Market</h2>
-      <p>KSE100: +1.12% | Dow: +0.85% | Sensex: -0.22%</p>
-    </div>
-
-    <!-- Pi Payment -->
-    <div class="card bg-white p-4 rounded-lg text-center">
-      <h2 class="text-xl font-semibold mb-2">🙏 Donate 0.01 Pi if you like our work</h2>
-      <button onclick="payWithPi()" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded-full">
-        Donate Now
-      </button>
-    </div>
-
-  </div>
-
-  <footer class="mt-10 text-center text-sm text-gray-500">
-    &copy; 2025 Gift Center Pi
-  </footer>
-
-  <!-- JavaScript -->
   <script>
-    // Pi SDK Initialization
-    window.onload = () => {
-      Pi.init({ version: "2.0", sandbox: false });
-    };
+    const loginBtn = document.getElementById("loginBtn");
+    const statusDiv = document.getElementById("status");
 
-    // Crypto Prices
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('btc-price').innerText = '$' + data.bitcoin.usd;
-        document.getElementById('eth-price').innerText = '$' + data.ethereum.usd;
+    loginBtn.addEventListener("click", () => {
+      window.Pi.authenticate(["username", "payments"], function(auth) {
+        const username = auth.user.username;
+        const accessToken = auth.accessToken;
+
+        statusDiv.innerHTML = `✅ Logged in as <b>${username}</b><br><br>
+        <button onclick="donatePi('${username}', '${accessToken}')">Donate 0.001 Pi</button>`;
+      }, function(error) {
+        statusDiv.innerHTML = "❌ Login error: " + error;
       });
+    });
 
-    // Bull Run Global Data
-    fetch('https://api.coingecko.com/api/v3/global')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('market-cap').innerText = '$' + (data.data.total_market_cap.usd / 1e9).toFixed(2) + 'B';
-        document.getElementById('btc-dominance').innerText = data.data.market_cap_percentage.btc.toFixed(1) + '%';
-      });
-
-    // Meme & Altcoin Prices
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids=dogecoin,shiba-inu,pepe,solana,cardano,polygon,avalanche-2&vs_currencies=usd')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('doge-price').innerText = '$' + data.dogecoin.usd;
-        document.getElementById('shib-price').innerText = '$' + data['shiba-inu'].usd;
-        document.getElementById('pepe-price').innerText = '$' + data.pepe.usd;
-        document.getElementById('sol-price').innerText = '$' + data.solana.usd;
-        document.getElementById('ada-price').innerText = '$' + data.cardano.usd;
-        document.getElementById('matic-price').innerText = '$' + data.polygon.usd;
-        document.getElementById('avax-price').innerText = '$' + data['avalanche-2'].usd;
-      });
-
-    // Gregorian Date
-    const today = new Date();
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('greg-date').innerText = 'Gregorian: ' + today.toLocaleDateString('en-GB', options);
-
-    // Hijri Date
-    const hijriDate = new Intl.DateTimeFormat('en-TN-u-ca-islamic', {
-      day: 'numeric', month: 'long', year: 'numeric'
-    }).format(today);
-    document.getElementById('hijri-date').innerText = 'Hijri: ' + hijriDate;
-
-    // Pi Payment
-    function payWithPi() {
-      const paymentData = {
-        amount: 0.01,
-        memo: "Donation to Gift Center Pi",
-        metadata: { purpose: "gift" },
-        to: "GCJNUEHCGWA3GWAUG2XQHPSTDD32GLJ6UICEOQP5NBZARPSLEJP2UCMC"
-      };
-
-      Pi.createPayment(paymentData, {
-        onReadyForServerApproval: function (paymentId) {
-          alert('Send this payment ID to your backend: ' + paymentId);
+    function donatePi(username, accessToken) {
+      window.Pi.createPayment({
+        amount: 0.001,
+        memo: `Donation by ${username}`,
+        metadata: { user: username }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          alert("🕒 Sending to server for approval...");
+          // ⚠️ No real backend, so we auto approve (for test only)
+          setTimeout(() => {
+            alert("⚠️ No backend available. Payment will auto-cancel in 5 min.");
+          }, 1000);
         },
-        onReadyForServerCompletion: function (paymentId, txid) {
-          alert('Payment completed with txid: ' + txid);
+
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("🕒 Marking payment complete on server...");
+          // Dummy delay for frontend testing
+          setTimeout(() => {
+            alert("✅ Payment marked complete (Simulated)");
+          }, 1000);
         },
-        onCancel: function () {
-          alert('Payment cancelled.');
+
+        onCancelled: function(paymentId) {
+          alert("❌ Payment cancelled.");
         },
-        onError: function (error) {
-          alert('Error: ' + error);
+
+        onCompleted: function(paymentId, txid) {
+          alert("✅ Payment complete! Thank you for your support.");
+        },
+
+        onError: function(error, payment) {
+          alert("⚠️ Error: " + error);
         }
       });
     }
